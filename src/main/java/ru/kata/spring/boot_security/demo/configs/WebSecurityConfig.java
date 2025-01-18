@@ -37,7 +37,7 @@ public class WebSecurityConfig {
     public UserDetailsService userDetailsService() {
         UserDetails user = User
                 .withUsername("user")
-                .password("{noop}user") // Используем {noop} для указания, что пароль не зашифрован
+                .password("{noop}all")
                 .roles("USER")
                 .build();
 
