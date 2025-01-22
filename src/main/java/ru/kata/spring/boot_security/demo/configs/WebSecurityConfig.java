@@ -2,12 +2,14 @@ package ru.kata.spring.boot_security.demo.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import ru.kata.spring.boot_security.demo.model.RoleType;
 
 @Configuration
 public class WebSecurityConfig {
@@ -22,7 +24,11 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/", "/index").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers(HttpMethod.GET, "/user/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/admin/**").hasRole( "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/admin/**").hasRole( "ADMIN")
+                        .anyRequest()
+                        .authenticated()
                 )
                 .formLogin(form -> form
                         .successHandler(successUserHandler)
@@ -41,6 +47,12 @@ public class WebSecurityConfig {
                 .roles("USER")
                 .build();
 
-        return new InMemoryUserDetailsManager(user);
+        UserDetails admin = User
+                .withUsername("admin")
+                .password("{noop}admin") // Используем {noop} для указания, что пароль не зашифрован
+                .roles("ADMIN")
+                .build();
+
+        return new InMemoryUserDetailsManager(admin);
     }
 }

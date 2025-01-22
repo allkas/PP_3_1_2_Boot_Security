@@ -14,11 +14,23 @@
     <br/>
 
     <label for="name">First Name</label>
-    <input type="text" th:field="*{name}" id="name" placeholder="First Name" />
+    <input type="text" th:field="*{firstName}" id="name" placeholder="First Name" />
     <br/>
 
     <label for="lastName">Last Name</label>
     <input type="text" th:field="*{lastName}" id="lastName" placeholder="Last Name" />
+    <br/>
+
+    <label for="age">age</label>
+    <input type="text" th:field="*{age}" id="age" placeholder="age" />
+    <br/>
+
+    <label for="email">email</label>
+    <input type="text" th:field="*{email}" id="email" placeholder="email" />
+    <br/>
+
+    <label for="password">password</label>
+    <input type="text" th:field="*{password}" id="password" placeholder="password" />
     <br/>
 
     <input type="submit" value="Update User" />

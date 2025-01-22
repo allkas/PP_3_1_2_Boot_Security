@@ -7,10 +7,22 @@
 <body>
 <form action="#" th:action="@{/user-create}" th:object="${user}" method="post">
     <label for="name">First name</label>
-    <input type="text" th:field="*{name}" id="name" placeholder="name">
+    <input type="text" th:field="*{firstName}" id="name" placeholder="name">
+
     <label for="lastName">Last name</label>
     <input type="text" th:field="*{lastName}" id="lastName" placeholder="Last Name">
+
+    <label for="age">age</label>
+    <input type="text" th:field="*{age}" id="age" placeholder="age">
+
+    <label for="email">email</label>
+    <input type="text" th:field="*{email}" id="email" placeholder="email">
+
+    <label for="password">password</label>
+    <input type="text" th:field="*{password}" id="password" placeholder="password">
+
     <input type="submit" value="Create User">
+
 </form>
 </body>
 </html>
