@@ -7,10 +7,9 @@
 <body>
 <h1>Edit User</h1>
 
-
 <form th:action="@{/user-update}" th:object="${user}" method="post">
     <label for="id">ID</label>
-    <input type="number" th:field="*{id}" id="id" placeholder="ID" />
+    <input type="number" th:field="*{id}" id="id" placeholder="ID" readonly />
     <br/>
 
     <label for="name">First Name</label>
@@ -21,17 +20,29 @@
     <input type="text" th:field="*{lastName}" id="lastName" placeholder="Last Name" />
     <br/>
 
-    <label for="age">age</label>
-    <input type="text" th:field="*{age}" id="age" placeholder="age" />
+    <label for="age">Age</label>
+    <input type="text" th:field="*{age}" id="age" placeholder="Age" />
     <br/>
 
-    <label for="email">email</label>
-    <input type="text" th:field="*{email}" id="email" placeholder="email" />
+    <label for="email">Email</label>
+    <input type="text" th:field="*{email}" id="email" placeholder="Email" />
     <br/>
 
-    <label for="password">password</label>
-    <input type="text" th:field="*{password}" id="password" placeholder="password" />
+    <label for="password">Password</label>
+    <input type="password" th:field="*{password}" id="password" placeholder="Password" />
     <br/>
+
+    <p>
+        <label>Roles:</label>
+    <div>
+        <input type="checkbox"
+               th:each="role : ${allRoles}"
+               th:field="*{roles}"
+               th:value="${role.id}"
+               th:checked="${user.roles.contains(role)}"
+               th:text="${role.name}" />
+    </div>
+    </p>
 
     <input type="submit" value="Update User" />
 </form>
