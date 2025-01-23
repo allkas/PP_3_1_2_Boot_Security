@@ -35,12 +35,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException(String.format("не найден " + email));
         }
 
-        return new org.springframework.security.core.userdetails.User(user.getFirstName(), user.getPassword(), mapAuthorities(user.getRoles()));
+        return new org.springframework.security.core.userdetails.User(
+                user.getFirstName(),
+                user.getPassword(),
+                mapAuthorities(user.getRoles())
+        );
     }
 
 
     private Collection<? extends GrantedAuthority> mapAuthorities(Collection<Role> roles) {
-        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName().name())).collect(Collectors.toList());
     }
 }
 
