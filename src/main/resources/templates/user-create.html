@@ -5,7 +5,13 @@
     <title>Create user</title>
 </head>
 <body>
-<form action="#" th:action="@{/user-create}" th:object="${user}" method="post">
+<div>
+    <form th:action="@{/logout}" method="post" style="display: inline;">
+        <button type="submit">Logout</button>
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+    </form>
+</div>
+<form action="#" th:action="@{/admin/user-create}" th:object="${user}" method="post">
     <label for="name">First name</label>
     <input type="text" th:field="*{firstName}" id="name" placeholder="name">
 

@@ -5,6 +5,12 @@
     <title>Users</title>
 </head>
 <body>
+<div>
+    <form th:action="@{/logout}" method="post" style="display: inline;">
+        <button type="submit">Logout</button>
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+    </form>
+</div>
 <div th:switch="${users}">
     <h2 th:case="null">No users found!</h2>
     <div th:case="*">
@@ -32,13 +38,13 @@
                 <td>
                     <span th:each="role : ${user.roles}" th:text="${role.name} + ' '"></span>
                 </td>
-                <td><a th:href="@{user-update/{id}(id=${user.id})}">Edit</a></td>
-                <td><a th:href="@{user-delete/{id}(id=${user.id})}">Delete</a></td>
+                <td><a th:href="@{/admin/user-update/{id}(id=${user.id})}">Edit</a></td>
+                <td><a th:href="@{/admin/user-delete/{id}(id=${user.id})}">Delete</a></td>
             </tr>
             </tbody>
         </table>
     </div>
-    <p><a href="/user-create">Create user</a></p>
+    <p><a href="/admin/user-create">Create user</a></p>
 </div>
 </body>
 </html>

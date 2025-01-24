@@ -31,8 +31,10 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/", "/index").permitAll()
                         .requestMatchers(HttpMethod.GET, "/user/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/admin/**").hasRole( "ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/admin/**").hasRole( "ADMIN")
+                        .requestMatchers("/admin/**").hasRole( "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/admin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/user").hasAnyRole("USER", "ADMIN")
                         .anyRequest()
                         .authenticated()
                 )
@@ -40,7 +42,11 @@ public class WebSecurityConfig {
                         .successHandler(successUserHandler)
                         .permitAll()
                 )
-                .logout(logout -> logout.permitAll());
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout")
+                        .permitAll()
+                );
 
         return http.build();
     }

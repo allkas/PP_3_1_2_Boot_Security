@@ -4,6 +4,12 @@
     <title>Spring Security Example</title>
 </head>
 <body>
+<div>
+    <form th:action="@{/logout}" method="post" style="display: inline;">
+        <button type="submit">Logout</button>
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+    </form>
+</div>
 <h1>Welcome to Index PAGE!</h1>
 
 
