@@ -30,11 +30,11 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/", "/index").permitAll()
+                        .requestMatchers("/user").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/user/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/admin/**").hasRole( "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/user").hasAnyRole("USER", "ADMIN")
                         .anyRequest()
                         .authenticated()
                 )
