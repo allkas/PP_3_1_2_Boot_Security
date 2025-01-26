@@ -33,8 +33,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email);
     }
 
-
-
     @Transactional
     public void saveUser(User user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -42,6 +40,21 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    @Transactional
+    public void updateUser(Long id, User updatedUser) {
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (updatedUser.getPassword() == null || updatedUser.getPassword().isEmpty()) {
+            updatedUser.setPassword(existingUser.getPassword());
+        } else if (!updatedUser.getPassword().equals(existingUser.getPassword())) {
+            updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+        }
+
+        updatedUser.setRoles(existingUser.getRoles()); // если роли не редактируются в форме
+        updatedUser.setId(existingUser.getId());
+        userRepository.save(updatedUser);
+    }
 
     @Transactional
     public void deleteById(Long id) {

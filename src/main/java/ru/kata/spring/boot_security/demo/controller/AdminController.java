@@ -72,12 +72,13 @@ public class AdminController {
     }
 
     @PostMapping("/user-update")
-    public String updateUser(@RequestParam("id") Long id, @ModelAttribute("user") User user, BindingResult result) {
+    public String updateUser(@RequestParam("id") Long id, @ModelAttribute("user") User updatedUser, BindingResult result) {
         if (result.hasErrors()) {
             return "user-update";
         }
-        user.setId(id);
-        userService.saveUser(user);
+        updatedUser.setId(id);
+        userService.updateUser(id, updatedUser);
+
         return "redirect:/admin/users";
     }
 
