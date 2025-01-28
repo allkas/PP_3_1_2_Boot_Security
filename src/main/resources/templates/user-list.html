@@ -3,13 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <title>Users</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<div>
-    <form th:action="@{/logout}" method="post" style="display: inline;">
-        <button type="submit">Logout</button>
-        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+<nav class="navbar navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">
+<!--        Admin Panel-->
+
+    </a>
+    <span class="navbar-text">
+<!--            admin@mail.ru with roles: ADMIN USER-->
+        </span>
+    <form th:action="@{/logout}" method="post" class="form-inline">
+        <button type="submit" class="btn btn-outline-light">Logout</button>
     </form>
+</nav>
+
+<div class="container-fluid">
+    <!-- A fluid container that uses the full witdh -->
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/admin}">Admin</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">User</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
 </div>
 <div th:switch="${users}">
     <h2 th:case="null">No users found!</h2>

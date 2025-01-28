@@ -44,17 +44,25 @@ public class UserServiceImpl implements UserService {
     public void updateUser(Long id, User updatedUser) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-
         if (updatedUser.getPassword() == null || updatedUser.getPassword().isEmpty()) {
             updatedUser.setPassword(existingUser.getPassword());
         } else if (!updatedUser.getPassword().equals(existingUser.getPassword())) {
             updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
         }
+        if (updatedUser.getRoles() != null) {
+            existingUser.getRoles().clear(); // Удаляем старые роли
+            existingUser.getRoles().addAll(updatedUser.getRoles()); // Добавляем новые роли
+        }
+        existingUser.setFirstName(updatedUser.getFirstName());
+        existingUser.setLastName(updatedUser.getLastName());
+        existingUser.setAge(updatedUser.getAge());
+        existingUser.setEmail(updatedUser.getEmail());
+        existingUser.setPassword(updatedUser.getPassword());
 
-        updatedUser.setRoles(existingUser.getRoles()); // если роли не редактируются в форме
-        updatedUser.setId(existingUser.getId());
-        userRepository.save(updatedUser);
+        userRepository.save(existingUser);
     }
+
+
 
     @Transactional
     public void deleteById(Long id) {

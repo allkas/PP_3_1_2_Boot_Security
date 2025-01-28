@@ -3,14 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>User</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<div>
-    <form th:action="@{/logout}" method="post" style="display: inline;">
-        <button type="submit">Logout</button>
-        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+<nav class="navbar navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">
+        <!--        Admin Panel-->
+
+    </a>
+    <span class="navbar-text">
+<!--            admin@mail.ru with roles: ADMIN USER-->
+        </span>
+    <form th:action="@{/logout}" method="post" class="form-inline">
+        <button type="submit" class="btn btn-outline-light">Logout</button>
     </form>
-</div>
+</nav>
 <h1>Welcome, <span th:text="${user.firstName}">User</span>!</h1>
 
 <p><strong>First Name:</strong> <span th:text="${user.firstName}"></span></p>
