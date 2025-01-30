@@ -30,15 +30,17 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/", "/index").permitAll()
+                        .requestMatchers("/login", "/login-error").permitAll() // Разрешаем доступ к страницам входа
                         .requestMatchers("/user").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/user/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/admin/**").hasRole( "ADMIN")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/admin/**").hasRole("ADMIN")
-                        .anyRequest()
-                        .authenticated()
+                        .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
+                        .loginPage("/login") // Указываем, что страница входа — это "/login"
+                        .failureUrl("/login-error") // При ошибке входа перенаправляем на "/login-error"
                         .successHandler(successUserHandler)
                         .permitAll()
                 )
@@ -47,6 +49,7 @@ public class WebSecurityConfig {
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()
                 );
+
 
         return http.build();
     }

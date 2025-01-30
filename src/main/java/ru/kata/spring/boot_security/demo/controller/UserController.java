@@ -28,6 +28,7 @@ public class UserController {
         String email = authentication.getName();
         Optional<User> user = userService.findByEmail(email);
         model.addAttribute("user", user.get());
+        model.addAttribute("currentUser", user);
         return "user";
     }
 }
