@@ -107,45 +107,47 @@
                 </div>
 
                 <!-- Форма создания пользователя -->
-                <div id="newUser" class="tab-pane fade mt-3">
-                    <div class="card">
-                        <div class="card-header">
-                            Create new user
+                <div id="newUser" class="tab-pane fade mt-3 d-flex justify-content-center">
+                    <div class="card" style="max-width: 400px; width: 100%;">
+                        <div class="card-header text-center">
+                            Add new user
                         </div>
                         <div class="card-body">
                             <form th:action="@{/admin/user-create}" method="post">
                                 <div class="form-group">
                                     <label>First Name:</label>
-                                    <input type="text" class="form-control" name="firstName" required>
+                                    <input type="text" class="form-control" name="firstName" required style="background-color: #fff3cd;">
                                 </div>
                                 <div class="form-group">
                                     <label>Last Name:</label>
-                                    <input type="text" class="form-control" name="lastName" required>
+                                    <input type="text" class="form-control" name="lastName" required style="background-color: #fff3cd;">
                                 </div>
                                 <div class="form-group">
                                     <label>Age:</label>
-                                    <input type="number" class="form-control" name="age" required>
+                                    <input type="number" class="form-control" name="age" required style="background-color: #fff3cd;">
                                 </div>
                                 <div class="form-group">
                                     <label>Email:</label>
-                                    <input type="email" class="form-control" name="email" required>
+                                    <input type="email" class="form-control" name="email" required style="background-color: #fff3cd;">
                                 </div>
                                 <div class="form-group">
                                     <label>Password:</label>
                                     <input type="password" class="form-control" name="password" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>Roles:</label>
-                                    <div th:each="role : ${allRoles}">
-                                        <input type="checkbox" name="roles" th:value="${role.id}">
-                                        <label th:text="${role.name}"></label>
-                                    </div>
+                                    <label>Role:</label>
+                                    <select class="form-control" name="roles" multiple>
+                                        <option th:each="role : ${allRoles}" th:value="${role.id}" th:text="${role.name}"></option>
+                                    </select>
                                 </div>
-                                <button type="submit" class="btn btn-success">Create</button>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-success">Add new user</button>
+                                </div>
                             </form>
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <!-- Модальные окна для Edit и Delete -->
@@ -178,11 +180,13 @@
                                         <input type="text" class="form-control" name="email" th:value="${user.email}" required>
                                     </div>
                                     <div class="form-group">
-                                        <label>Roles:</label>
-                                        <div th:each="role : ${allRoles}">
-                                            <input type="checkbox" name="roles" th:value="${role.id}">
-                                            <label th:text="${role.name}"></label>
-                                        </div>
+                                    <div class="form-group">
+                                        <label>Role:</label>
+                                        <select class="form-control" name="roles" multiple size="2">
+                                            <option th:each="role : ${allRoles}" th:value="${role.id}" th:text="${role.name}"></option>
+                                        </select>
+                                    </div>
+
                                     </div>
                                     <button type="submit" class="btn btn-primary">Save changes</button>
                                 </form>
@@ -200,7 +204,31 @@
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                             </div>
                             <div class="modal-body">
-                                <p>Are you sure you want to delete <span th:text="${user.email}"></span>?</p>
+                                <form>
+                                    <div class="form-group">
+                                        <label>First Name:</label>
+                                        <input type="text" class="form-control" name="firstName" th:value="${user.firstName}" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Last Name:</label>
+                                        <input type="text" class="form-control" name="lastName" th:value="${user.lastName}" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Age:</label>
+                                        <input type="text" class="form-control" name="age" th:value="${user.age}" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Email:</label>
+                                        <input type="text" class="form-control" name="email" th:value="${user.email}" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Roles:</label>
+                                        <div th:each="role : ${allRoles}">
+                                            <input type="checkbox" name="roles" th:value="${role.id}" disabled>
+                                            <label th:text="${role.name}"></label>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                             <div class="modal-footer">
                                 <form th:action="@{/admin/user-delete}" method="post">
@@ -211,6 +239,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
 
         </main>

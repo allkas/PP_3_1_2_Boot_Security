@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<!--      xmlns:sec="http://www.w3.org/1999/xhtml"-->
+<!--      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">-->
 <head>
     <meta charset="UTF-8">
     <title>User page</title>
@@ -22,18 +24,16 @@
 <div class="container-fluid">
     <div class="row">
         <!-- Боковое меню -->
-<!--        <nav class="col-md-2 d-none d-md-block bg-light sidebar">-->
+<!--        <nav class="col-2 sidebar px-0 pt-3">-->
 <!--            <div class="sidebar-sticky">-->
-<!--                <ul class="nav flex-column">-->
-
+<!--                <ul class="nav nav-pills flex-column">-->
 <!--                    <li class="nav-item">-->
 <!--                        <div sec:authorize="hasRole('ROLE_ADMIN')">-->
-<!--                        <a class="nav-link active btn btn-primary text-white" href="@{/admin}">Admin</a>-->
+<!--                            <a class="nav-link" th:href="@{/admin}">Admin</a>-->
 <!--                        </div>-->
 <!--                    </li>-->
-
 <!--                    <li class="nav-item">-->
-<!--                        <a class="nav-link active btn btn-primary text-white" href="@{/user}">User</a>-->
+<!--                        <a class="nav-link active" th:href="@{/user}">User</a>-->
 <!--                    </li>-->
 <!--                </ul>-->
 <!--            </div>-->
@@ -41,18 +41,20 @@
         <nav class="col-2 sidebar px-0 pt-3">
             <div class="sidebar-sticky">
                 <ul class="nav nav-pills flex-column">
-                    <li class="nav-item">
-                        <div sec:authorize="hasRole('ROLE_ADMIN')">
-<!--                           th:href="@{/admin}">Admin-->
-                            <a class="nav-link active" th:href="@{/admin}">Admin</a>
-                        </div>
+                    <!-- Скрываем кнопку Admin для пользователей без ROLE_ADMIN -->
+                    <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <a class="nav-link" th:href="@{/admin}">Admin</a>
                     </li>
+
+                    <!-- Вкладка User, доступная всем авторизованным пользователям -->
                     <li class="nav-item">
                         <a class="nav-link active" th:href="@{/user}">User</a>
                     </li>
                 </ul>
             </div>
         </nav>
+
+
 
         <main role="main" class="col-md-10 ml-sm-auto px-4">
             <h2 class="mt-4">User information-page</h2>
