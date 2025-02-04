@@ -222,11 +222,11 @@
                                         <input type="text" class="form-control" name="email" th:value="${user.email}" readonly>
                                     </div>
                                     <div class="form-group">
-                                        <label>Roles:</label>
-                                        <div th:each="role : ${allRoles}">
-                                            <input type="checkbox" name="roles" th:value="${role.id}" disabled>
-                                            <label th:text="${role.name}"></label>
-                                        </div>
+                                        <label>Role:</label>
+                                        <select class="form-control" name="rolesToDelete" multiple size="2" disabled>
+                                            <option th:each="role : ${allRoles}" th:value="${role.id}" th:text="${role.name}"></option>
+                                        </select>
+
                                     </div>
                                 </form>
                             </div>

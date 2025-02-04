@@ -47,6 +47,9 @@ public class AdminController {
         } else {
             return "redirect:/login";
         }
+//        new ModelMap()
+//                .addAttribute()
+//                .addAttribute()
         model.addAttribute("allRoles", roleService.findAllRoles());
         model.addAttribute("newUser", new User());
         model.addAttribute("users", userService.findAll());
