@@ -9,9 +9,9 @@ import java.util.Optional;
 public interface UserService {
     public User findById(Long id);
     public List<User> findAll();
-    public void saveUser(User user);
+    public User saveUser(User user);
     public void deleteById(Long id);
     public Optional<User> findByEmail(String email);
-    public void updateUser(Long id, User updatedUser);
+    public User updateUser(Long id, User updatedUser);
 
 }

@@ -1,13 +1,11 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
@@ -16,7 +14,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
-@Controller
+@RestController
 @RequestMapping("/admin")
 public class AdminController {
     private final UserService userService;
@@ -28,60 +26,59 @@ public class AdminController {
         this.roleService = roleService;
     }
 
-//    @GetMapping
-//    public String adminHome(@AuthenticationPrincipal UserDetails currentUser, ModelMap model) {
-//        //List<User> users = userService.findAll();
-//
-//        model.addAttribute("user", currentUser);
-//        model.addAttribute("users", userService.findAll());
-//        model.addAttribute("allRoles", roleService.findAllRoles());
-//        model.addAttribute("newUser", new User()); // Для формы создания пользователя
-//
-//        return "admin";
-//    }
-    @GetMapping
-    public String adminHome(ModelMap model, Principal principal) {
+    @GetMapping("/current")
+    public ResponseEntity<User> getCurrentUser(Principal principal) {
         Optional<User> user = userService.findByEmail(principal.getName());
-        if (user.isPresent()) {
-            model.addAttribute("user", user.get());
-        } else {
-            return "redirect:/login";
-        }
-//        new ModelMap()
-//                .addAttribute()
-//                .addAttribute()
-        model.addAttribute("allRoles", roleService.findAllRoles());
-        model.addAttribute("newUser", new User());
-        model.addAttribute("users", userService.findAll());
-        model.addAttribute("currentUser", user);
-
-
-        return "admin";
+        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/user-create")
-    public String createUser(@ModelAttribute("newUser") User user, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            model.addAttribute("users", userService.findAll());
-            model.addAttribute("allRoles", roleService.findAllRoles());
-            return "admin";
-        }
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(userService.findAll());
+    }
+
+    @GetMapping("/users/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.findById(id));
+    }
+
+    @PostMapping("/users")
+    public ResponseEntity<User> createUser(@RequestBody User user) {
         userService.saveUser(user);
-        return "redirect:/admin";
+        return ResponseEntity.ok(user);
     }
 
-    @PostMapping("/user-update")
-    public String updateUser(@ModelAttribute("user") User updatedUser, BindingResult result) {
-        if (result.hasErrors()) {
-            return "admin";
+    @PutMapping("/users/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
+        Optional<User> existingUser = Optional.ofNullable(userService.findById(id));
+        if (existingUser.isPresent()) {
+            userService.updateUser(id, updatedUser);
+            return ResponseEntity.ok(updatedUser);
+        } else {
+            return ResponseEntity.notFound().build();
         }
-        userService.updateUser(updatedUser.getId(), updatedUser);
-        return "redirect:/admin";
     }
 
-    @PostMapping("/user-delete")
-    public String deleteUser(@RequestParam("id") Long id) {
-        userService.deleteById(id);
-        return "redirect:/admin";
+//    @PutMapping("/users")
+//    public ResponseEntity<User> updateUser(@RequestBody User updatedUser) {
+//        User user = userService.saveUser(updatedUser);
+//        return ResponseEntity.ok(user);
+//}
+
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        Optional<User> existingUser = Optional.ofNullable(userService.findById(id));
+        if (existingUser.isPresent()) {
+            userService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+    @GetMapping("/roles")
+    public ResponseEntity<List<Role>> getAllRoles() {
+        return ResponseEntity.ok(roleService.findAllRoles());
     }
 }

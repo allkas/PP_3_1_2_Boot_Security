@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>User Page</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- Навигационная панель -->
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+        <span class="navbar-text text-white font-weight-bold" id="user-info"></span>
+        <form action="/logout" method="post">
+            <button type="submit" class="btn btn-outline-light">Logout</button>
+        </form>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Боковое меню -->
+
+        <nav class="col-2 sidebar px-0 pt-3">
+            <div class="sidebar-sticky">
+                <ul class="nav nav-pills flex-column">
+                    <li class="nav-item" id="admin-link" style="display: none;">
+                        <a class="nav-link" href="/admin.html">Admin</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/user.html">User</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Основной контент -->
+        <main class="col-md-10 ml-sm-auto px-4">
+            <h2 class="mt-4">User Information</h2>
+            <div class="card mt-3">
+                <div class="card-header">About user</div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Age</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                        </tr>
+                        </thead>
+                        <tbody id="user-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch('/api/user') // Измененный путь
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("User not found or unauthorized");
+                }
+                return response.json();
+            })
+            .then(user => {
+                document.getElementById('user-info').innerText = `${user.email} with roles: ${user.roles.map(r => r.name).join(', ')}`;
+
+                document.getElementById('user-table-body').innerHTML = `
+                <tr>
+                    <td>${user.id}</td>
+                    <td>${user.firstName}</td>
+                    <td>${user.lastName}</td>
+                    <td>${user.age}</td>
+                    <td>${user.email}</td>
+                    <td>${user.roles.map(r => r.name).join(', ')}</td>
+                </tr>`;
+
+                if (user.roles.some(role => role.name === "ADMIN" || role.name === "ROLE_ADMIN")) {
+                    document.getElementById('admin-link').style.display = "block";
+                }
+            })
+            .catch(error => console.error('Error fetching user data:', error));
+    });
+
+</script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

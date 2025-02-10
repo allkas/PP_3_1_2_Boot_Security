@@ -34,14 +34,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public void saveUser(User user){
+    public User saveUser(User user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
+        return user;
     }
 
 
     @Transactional
-    public void updateUser(Long id, User updatedUser) {
+    public User updateUser(Long id, User updatedUser) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         if (updatedUser.getPassword() == null || updatedUser.getPassword().isEmpty()) {
@@ -60,6 +61,7 @@ public class UserServiceImpl implements UserService {
         existingUser.setPassword(updatedUser.getPassword());
 
         userRepository.save(existingUser);
+        return existingUser;
     }
 
 

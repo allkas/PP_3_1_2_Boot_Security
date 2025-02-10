@@ -1,19 +1,19 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
-import java.security.Principal;
 import java.util.Optional;
 
-@Controller
+@RestController
+@RequestMapping("/api") // Изменяем базовый путь на "/api"
 public class UserController {
 
     private final UserService userService;
@@ -24,11 +24,15 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public String showUserPage(Authentication authentication, Model model) {
+    public ResponseEntity<?> getCurrentUser(Authentication authentication) {
+        if (authentication == null || authentication.getName() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
+        }
+
         String email = authentication.getName();
-        Optional<User> user = userService.findByEmail(email);
-        model.addAttribute("user", user.get());
-        model.addAttribute("currentUser", user);
-        return "user";
+        return userService.findByEmail(email)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 }
+
