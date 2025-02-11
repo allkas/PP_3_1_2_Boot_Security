@@ -43,6 +43,7 @@ public class WebSecurityConfig {
 //                        .requestMatchers("/admin/**").hasRole("ADMIN")
 //                        .requestMatchers(HttpMethod.POST, "/admin/**").hasRole("ADMIN")
 //                        .requestMatchers(HttpMethod.DELETE, "/admin/**").hasRole("ADMIN")
+//                        .requestMatchers("/api/auth/**").permitAll()
 //                        .anyRequest().authenticated()
 //                )
 //                .formLogin(form -> form
@@ -60,51 +61,54 @@ public class WebSecurityConfig {
 //
 //        return http.build();
 //    }
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/index").permitAll()
-                        .requestMatchers("/login", "/login-error").permitAll() // Разрешаем доступ к страницам входа
-                        .requestMatchers("/user").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/user/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/admin/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/admin/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()
-                )
-                .formLogin(withDefaults()) // Включаем стандартную форму логина
-                .httpBasic(withDefaults()); // Поддержка Basic-Auth
-
-        return http.build();
-    }
 //    @Bean
 //    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 //        http
-//                .csrf(AbstractHttpConfigurer::disable)  // Отключаем CSRF (для REST API)
-//                .cors(Customizer.withDefaults())       // Включаем поддержку CORS
-//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Без сессий (JWT)
+//                .csrf().disable()
 //                .authorizeHttpRequests(authorize -> authorize
-//                        .requestMatchers(HttpMethod.GET, "/api/public/**").permitAll()  // Публичные API
-//                        .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()   // API для аутентификации
-//                        .requestMatchers(HttpMethod.GET, "/api/user/**").hasAnyRole("USER", "ADMIN")  // Доступ к user API
-//                        .requestMatchers(HttpMethod.POST, "/api/admin/**").hasRole("ADMIN")          // Админские API
-//                        .requestMatchers(HttpMethod.DELETE, "/api/admin/**").hasRole("ADMIN")
-//                        .anyRequest().authenticated()  // Все остальные запросы требуют аутентификации
+//                        .requestMatchers("/", "/index").permitAll()
+//                        .requestMatchers("/login", "/login-error").permitAll() // Разрешаем доступ к страницам входа
+//                        .requestMatchers("/user").hasAnyRole("USER", "ADMIN")
+//                        .requestMatchers(HttpMethod.GET, "/user/**").hasAnyRole("USER", "ADMIN")
+//                        .requestMatchers("/admin/**").hasRole("ADMIN")
+//                        .requestMatchers(HttpMethod.POST, "/admin/**").hasRole("ADMIN")
+//                        .requestMatchers(HttpMethod.DELETE, "/admin/**").hasRole("ADMIN")
+//                        .requestMatchers(HttpMethod.PUT, "/admin/**").hasRole("ADMIN")
+//                        .anyRequest().authenticated()
 //                )
-//                .httpBasic(Customizer.withDefaults())  // Включаем Basic Auth (можно заменить на JWT)
-//                .logout(logout -> logout
-//                        .logoutUrl("/api/auth/logout")
-//                        .logoutSuccessHandler((request, response, authentication) -> {
-//                            response.setStatus(HttpServletResponse.SC_OK);
-//                        })
-//                        .permitAll()
-//                );
+//                .formLogin(withDefaults()) // Включаем стандартную форму логина
+//                .httpBasic(withDefaults()); // Поддержка Basic-Auth
 //
 //        return http.build();
 //    }
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(AbstractHttpConfigurer::disable)  // Отключаем CSRF (для REST API)
+                .cors(Customizer.withDefaults())       // Включаем поддержку CORS
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Без сессий (JWT)
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.GET, "/api/public/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/login.html").permitAll() // Публичные API
+                        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()   // API для аутентификации
+                        .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()   // API для аутентификации
+                        .requestMatchers(HttpMethod.GET, "/api/user/**").hasAnyRole("USER", "ADMIN")  // Доступ к user API
+                        .requestMatchers(HttpMethod.POST, "/api/admin/**").hasRole("ADMIN")          // Админские API
+                        .requestMatchers(HttpMethod.DELETE, "/api/admin/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()  // Все остальные запросы требуют аутентификации
+                )
+                .httpBasic(Customizer.withDefaults())  // Включаем Basic Auth (можно заменить на JWT)
+                .logout(logout -> logout
+                        .logoutUrl("/api/auth/logout")
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            response.setStatus(HttpServletResponse.SC_OK);
+                        })
+                        .permitAll()
+                );
+
+        return http.build();
+    }
+
 
 //    @Bean
 //    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
