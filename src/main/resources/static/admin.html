@@ -245,7 +245,12 @@
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(user)
-    }).then(() => window.location.reload());
+    }).then(() => {
+      $('#newUser').removeClass('show active'); // Переключаемся обратно на вкладку "Users Table"
+      $('.nav-tabs a[href="#usersTable"]').tab('show');
+      document.getElementById('createUserForm').reset(); // Очищаем форму
+      loadUsers(); // Обновляем таблицу без перезагрузки
+    });
   });
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -362,7 +367,7 @@
             })
             .then(() => {
               $('#editUserModal').modal('hide'); // Закрываем модалку
-              location.reload(); // Перезагружаем данные (можно заменить на обновление таблицы без перезагрузки)
+              loadUsers(); // Перезагружаем данные (можно заменить на обновление таблицы без перезагрузки)
             })
             .catch(error => console.error('Ошибка обновления пользователя:', error));
   });
