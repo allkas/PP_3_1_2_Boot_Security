@@ -51,10 +51,10 @@ public class WebSecurityConfig {
                 .httpBasic(Customizer.withDefaults())  // Включаем Basic Auth (можно заменить на JWT)
                 .logout(logout -> logout
                         .logoutUrl("/api/auth/logout")
-                        .logoutSuccessHandler((request, response, authentication) -> {
-                            response.setStatus(HttpServletResponse.SC_OK);
-                        })
-                        .permitAll()
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .logoutSuccessHandler((request, response, authentication) ->
+                                response.setStatus(200))
                 );
 
         return http.build();
