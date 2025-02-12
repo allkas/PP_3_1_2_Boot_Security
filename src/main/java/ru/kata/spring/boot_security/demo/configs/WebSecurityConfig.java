@@ -31,56 +31,7 @@ public class WebSecurityConfig {
         this.userDetailsService = userDetailsService;
     }
 
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .authorizeHttpRequests(authorize -> authorize
-//                        .requestMatchers("/", "/index").permitAll()
-//                        .requestMatchers("/login", "/login-error").permitAll() // Разрешаем доступ к страницам входа
-//                        .requestMatchers("/user").hasAnyRole("USER", "ADMIN")
-//                        .requestMatchers(HttpMethod.GET, "/user/**").hasAnyRole("USER", "ADMIN")
-//                        .requestMatchers("/admin/**").hasRole("ADMIN")
-//                        .requestMatchers(HttpMethod.POST, "/admin/**").hasRole("ADMIN")
-//                        .requestMatchers(HttpMethod.DELETE, "/admin/**").hasRole("ADMIN")
-//                        .requestMatchers("/api/auth/**").permitAll()
-//                        .anyRequest().authenticated()
-//                )
-//                .formLogin(form -> form
-//                        .loginPage("/login") // Указываем, что страница входа — это "/login"
-//                        .failureUrl("/login-error") // При ошибке входа перенаправляем на "/login-error"
-//                        .successHandler(successUserHandler)
-//                        .permitAll()
-//                )
-//                .logout(logout -> logout
-//                        .logoutUrl("/logout")
-//                        .logoutSuccessUrl("/login?logout")
-//                        .permitAll()
-//                );
-//
-//
-//        return http.build();
-//    }
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .csrf().disable()
-//                .authorizeHttpRequests(authorize -> authorize
-//                        .requestMatchers("/", "/index").permitAll()
-//                        .requestMatchers("/login", "/login-error").permitAll() // Разрешаем доступ к страницам входа
-//                        .requestMatchers("/user").hasAnyRole("USER", "ADMIN")
-//                        .requestMatchers(HttpMethod.GET, "/user/**").hasAnyRole("USER", "ADMIN")
-//                        .requestMatchers("/admin/**").hasRole("ADMIN")
-//                        .requestMatchers(HttpMethod.POST, "/admin/**").hasRole("ADMIN")
-//                        .requestMatchers(HttpMethod.DELETE, "/admin/**").hasRole("ADMIN")
-//                        .requestMatchers(HttpMethod.PUT, "/admin/**").hasRole("ADMIN")
-//                        .anyRequest().authenticated()
-//                )
-//                .formLogin(withDefaults()) // Включаем стандартную форму логина
-//                .httpBasic(withDefaults()); // Поддержка Basic-Auth
-//
-//        return http.build();
-//    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -110,18 +61,7 @@ public class WebSecurityConfig {
     }
 
 
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .authorizeHttpRequests(authorize -> authorize
-//                        .anyRequest().permitAll() // Разрешить ВСЕ запросы
-//                )
-//                .csrf(AbstractHttpConfigurer::disable) // Отключаем CSRF (не обязательно)
-//                .formLogin(AbstractHttpConfigurer::disable) // Убираем форму логина
-//                .httpBasic(AbstractHttpConfigurer::disable); // Отключаем Basic-Auth
-//
-//        return http.build();
-//    }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
