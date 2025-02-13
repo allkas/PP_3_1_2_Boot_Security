@@ -35,30 +35,38 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)  // Отключаем CSRF (для REST API)
-                .cors(Customizer.withDefaults())       // Включаем поддержку CORS
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Без сессий (JWT)
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults())
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                        .maximumSessions(1)
+                        .expiredUrl("/login?expired")
+                )
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.GET, "/api/public/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/login.html").permitAll() // Публичные API
-                        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()   // API для аутентификации
-                        .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()   // API для аутентификации
-                        .requestMatchers(HttpMethod.GET, "/api/user/**").hasAnyRole("USER", "ADMIN")  // Доступ к user API
-                        .requestMatchers(HttpMethod.POST, "/api/admin/**").hasRole("ADMIN")          // Админские API
+                        .requestMatchers(HttpMethod.POST, "/login.html").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/user/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()  // Все остальные запросы требуют аутентификации
+                        .anyRequest().authenticated()
                 )
-                .httpBasic(Customizer.withDefaults())  // Включаем Basic Auth (можно заменить на JWT)
+                .httpBasic(Customizer.withDefaults())
                 .logout(logout -> logout
                         .logoutUrl("/api/auth/logout")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
-                        .logoutSuccessHandler((request, response, authentication) ->
-                                response.setStatus(200))
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            response.setStatus(HttpServletResponse.SC_OK);
+                            response.getWriter().write("{\"message\": \"Logged out successfully\"}");
+                            response.getWriter().flush();
+                        })
                 );
 
         return http.build();
     }
+
 
 
 
