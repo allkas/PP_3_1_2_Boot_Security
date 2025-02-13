@@ -31,11 +31,5 @@ public class LoginController {
         return ResponseEntity.status(401).body(Map.of("error", "Invalid username or password"));
     }
 
-    // Выход из системы (если используется сессия)
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        request.logout(); // Официальный способ выхода
-        SecurityContextHolder.clearContext();
-        return ResponseEntity.ok(Map.of("message", "Logged out successfully"));
-    }
+
 }
