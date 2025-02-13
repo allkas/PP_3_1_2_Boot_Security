@@ -31,7 +31,7 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception  {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(withDefaults())
@@ -43,7 +43,6 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.GET, "/api/public/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/login.html").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/user/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/admin/**").hasRole("ADMIN")
@@ -51,22 +50,31 @@ public class WebSecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
-//                        .loginPage("/login.html")
-                        .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/user.html", true)
+                        .loginPage("/login") // Путь к странице логина
+                        .loginProcessingUrl("/login") // URL для обработки логина
+                        .defaultSuccessUrl("/user.html", true) // URL для перенаправления после успешного входа
+                        .failureUrl("/login?error=true") // URL для перенаправления при ошибке входа
                         .permitAll()
                 )
+//                .logout(logout -> logout
+//                        .logoutUrl("/logout")
+//                        .logoutSuccessHandler((request, response, authentication) -> {
+//                            response.setStatus(HttpServletResponse.SC_OK);
+//                            response.getWriter().write("{\"message\": \"Logged out successfully\"}");
+//                            response.getWriter().flush();
+//                        })
+//                        .invalidateHttpSession(true)
+//                        .clearAuthentication(true)
+//                        .deleteCookies("JSESSIONID")
+//                        .logoutSuccessUrl("/login")
+//                );
                 .logout(logout -> logout
-                        .logoutUrl("/api/auth/logout")
-                        .logoutSuccessHandler((request, response, authentication) -> {
-                            response.setStatus(HttpServletResponse.SC_OK);
-                            response.getWriter().write("{\"message\": \"Logged out successfully\"}");
-                            response.getWriter().flush();
-                        })
+                        .logoutUrl("/logout") // URL для выхода
+                        .logoutSuccessUrl("/login?logout=true") // URL для перенаправления после успешного выхода
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
                         .deleteCookies("JSESSIONID")
-                        .logoutSuccessUrl("/login.html")
+                        .permitAll()
                 );
 
         return http.build();
